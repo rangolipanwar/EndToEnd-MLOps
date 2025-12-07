@@ -4,6 +4,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import time
+from fastapi import BackgroundTasks
+from ml_pipeline import train_and_evaluate
+import joblib
 
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response
@@ -69,3 +72,15 @@ def predict(features: IrisFeatures):
 def metrics():
     data = generate_latest()
     return Response(content=data, media_type=CONTENT_TYPE_LATEST)
+@app.post("/retrain")
+def retrain(background_tasks: BackgroundTasks):
+    def do_retrain():
+        train_and_evaluate()
+        # reload model after training
+        global model, target_names
+        obj = joblib.load(MODEL_PATH)
+        model = obj["model"]
+        target_names = obj["target_names"]
+
+    background_tasks.add_task(do_retrain)
+    return {"status": "retraining started in background"}

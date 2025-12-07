@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: iris-mlops-service
+  name: mlops-iris-service
 spec:
   selector:
-    app: iris-mlops
+    app: mlops-iris
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8000
-  type: LoadBalancer
+  type: NodePort

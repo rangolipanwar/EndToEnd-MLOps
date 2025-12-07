@@ -56,3 +56,8 @@ def train_and_evaluate():
 
 if __name__ == "__main__":
     train_and_evaluate()
+# at top of ml_pipeline.py we already have train_and_evaluate()
+def train_only():
+    from sklearn.datasets import load_iris
+    # you can simulate "new data" by shuffling or just retraining
+    train_and_evaluate()

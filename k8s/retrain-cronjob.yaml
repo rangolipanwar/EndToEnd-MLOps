@@ -1,10 +1,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: iris-mlops-retrain
+  name: mlops-iris-retrain
 spec:
-  # Every day at midnight (you can change it to */5 * * * * for every 5 mins)
-  schedule: "0 0 * * *"
+  schedule: "0 * * * *"   # every hour (for demo)
   jobTemplate:
     spec:
       template:
@@ -15,9 +14,9 @@ spec:
               command: ["python", "ml_pipeline.py"]
               volumeMounts:
                 - name: model-storage
-                  mountPath: /app
+                  mountPath: /app/models
           volumes:
             - name: model-storage
               persistentVolumeClaim:
-                claimName: iris-model-pvc
+                claimName: model-pvc
           restartPolicy: OnFailure
