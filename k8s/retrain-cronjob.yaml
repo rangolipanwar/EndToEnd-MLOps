@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: iris-mlops-retrain
+spec:
+  # Every day at midnight (you can change it to */5 * * * * for every 5 mins)
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: retrain-container
+              image: your-docker-username/endtoend-mlops:latest
+              command: ["python", "ml_pipeline.py"]
+              volumeMounts:
+                - name: model-storage
+                  mountPath: /app
+          volumes:
+            - name: model-storage
+              persistentVolumeClaim:
+                claimName: iris-model-pvc
+          restartPolicy: OnFailure

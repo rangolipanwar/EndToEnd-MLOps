@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-mlops-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: iris-mlops
+  template:
+    metadata:
+      labels:
+        app: iris-mlops
+    spec:
+      containers:
+        - name: iris-mlops-container
+          image: rangolipanwar686/endtoend-mlops:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: model-storage
+              mountPath: /app
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: iris-model-pvc
