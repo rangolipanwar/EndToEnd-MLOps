@@ -49,27 +49,27 @@ jobs:
           push: true
           tags: rangolipanwar686/endtoend-mlops:latest
 
-  deploy-to-kubernetes:
-    needs: docker-build-and-push
-    runs-on: ubuntu-latest
+  # deploy-to-kubernetes:
+  #   needs: docker-build-and-push
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: "latest"
+  #     - name: Set up kubectl
+  #       uses: azure/setup-kubectl@v4
+  #       with:
+  #         version: "latest"
 
-      - name: Configure kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+  #     - name: Configure kubeconfig
+  #       run: |
+  #         mkdir -p $HOME/.kube
+  #         echo "" > $HOME/.kube/config
 
-      - name: Apply Kubernetes manifests
-        run: |
-          kubectl apply -f k8s/pvc.yaml
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl apply -f k8s/retrain-cronjob.yaml
+  #     - name: Apply Kubernetes manifests
+  #       run: |
+  #         kubectl apply -f k8s/pvc.yaml
+  #         kubectl apply -f k8s/deployment.yaml
+  #         kubectl apply -f k8s/service.yaml
+  #         kubectl apply -f k8s/retrain-cronjob.yaml
